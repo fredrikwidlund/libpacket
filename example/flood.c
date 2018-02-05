@@ -53,7 +53,7 @@ static int timer(void *state, int type, void *data)
   t = ntime();
   (void) t;
 
-  (void) fprintf(stderr, "out: %lu\n", s->out);
+  (void) fprintf(stderr, "out: %lu pps\n", s->out);
   s->out = 0;
   return REACTOR_OK;
 }
