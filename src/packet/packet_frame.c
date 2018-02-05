@@ -33,7 +33,7 @@ static packet_layer *packet_frame_top(packet_frame *f)
 static void packet_frame_icmp(packet_frame *f)
 {
   packet_layer *l0 = &f->layer[f->layers - 1], *l1 = &f->layer[f->layers];
-  size_t s0 = sizeof *l0->icmp, s1 = l0->size - s0;
+  int s0 = sizeof *l0->icmp, s1 = l0->size - s0;
 
   if (f->layers == PACKET_LAYERS_MAX || s0 > l0->size)
     return;
@@ -45,7 +45,7 @@ static void packet_frame_icmp(packet_frame *f)
 static void packet_frame_tcp(packet_frame *f)
 {
   packet_layer *l0 = &f->layer[f->layers - 1], *l1 = &f->layer[f->layers];
-  size_t s0 = l0->tcp->doff << 2, s1 = l0->size - s0;
+  int s0 = l0->tcp->doff << 2, s1 = l0->size - s0;
 
   if (f->layers == PACKET_LAYERS_MAX || s0 > l0->size)
     return;
@@ -179,10 +179,16 @@ void packet_frame_push(packet_frame *f, int type, void *data, size_t size)
   *packet_frame_top(f) = (packet_layer) {.type = type, .data = data, .size = size};
 }
 
-size_t packet_frame_size(packet_frame *f)
+/* public */
+
+void packet_frame_construct(packet_frame *f)
 {
-  int i;
-  size_t size;
+  *f = (packet_frame) {0};
+}
+
+int packet_frame_size(packet_frame *f)
+{
+  int i, size;
 
   size = 0;
   for (i = 0; i < f->layers; i ++)

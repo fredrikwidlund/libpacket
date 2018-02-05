@@ -110,7 +110,7 @@ static int packet_receive(packet *p)
           tp = d;
           if (tp->tp_len == tp->tp_snaplen)
             {
-              f = (packet_frame) {0};
+              packet_frame_construct(&f);
               packet_frame_link(&f, packet_offset(d, TPACKET_ALIGN(sizeof(struct tpacket3_hdr))),
                                 sizeof (struct sockaddr_ll));
               packet_frame_link_data(&f, packet_offset(d, tp->tp_mac), tp->tp_len);
@@ -177,10 +177,12 @@ int packet_open(packet *p, reactor_user_callback *callback, void *state, int typ
 
 void packet_close(packet *p)
 {
+  reactor_descriptor_close(&p->descriptor);
+  munmap(p->map, p->block_size * p->block_count);
   *p = (packet) {0};
 }
 
-static void *packet_get_frame(packet *p)
+static void *packet_ring_frame(packet *p)
 {
   struct tpacket_block_desc *bh;
   struct tpacket3_hdr *tp;
@@ -203,6 +205,7 @@ static void packet_write_queue(packet *p, packet_frame *f)
 
   packet_frame_copy(&copy, f);
   list_push_back(&p->queue, &copy, sizeof copy);
+  p->flags |= PACKET_FLAG_BLOCKED;
 }
 
 static void packet_write_wait(packet *p)
@@ -225,10 +228,9 @@ static int packet_write_ring(packet *p, packet_frame *f)
 {
   struct tpacket3_hdr *tp;
   void *d;
-  size_t len;
-  int i;
+  int i, len;
 
-  tp = packet_get_frame(p);
+  tp = packet_ring_frame(p);
   if (!tp)
     return 0;
 
@@ -284,5 +286,16 @@ int packet_flush(packet *p)
   if (!p->ring_size && list_empty(&p->queue))
     packet_write_done(p);
 
+  if (p->flags & PACKET_FLAG_BLOCKED && list_empty(&p->queue))
+    {
+      p->flags &= ~PACKET_FLAG_BLOCKED;
+      return reactor_user_dispatch(&p->user, PACKET_EVENT_WRITE, NULL);
+    }
+
   return REACTOR_OK;
+}
+
+int packet_blocked(packet *p)
+{
+  return !list_empty(&p->queue);
 }

@@ -6,9 +6,7 @@
 
 #include <dynamic.h>
 #include <reactor.h>
-
-#include "packet_frame.h"
-#include "packet.h"
+#include <packet.h>
 
 struct state
 {

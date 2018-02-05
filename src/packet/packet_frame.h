@@ -37,13 +37,14 @@ struct packet_layer
 struct packet_frame
 {
   packet_layer          layer[PACKET_LAYERS_MAX];
-  size_t                layers;
+  int                   layers;
   void                 *memory;
 };
 
+void   packet_frame_construct(packet_frame *);
 void   packet_frame_pop(packet_frame *, int, void *, size_t *);
 void   packet_frame_push(packet_frame *, int, void *, size_t);
-size_t packet_frame_size(packet_frame *);
+int    packet_frame_size(packet_frame *);
 void   packet_frame_copy(packet_frame *, packet_frame *);
 void   packet_frame_release(packet_frame *);
 
