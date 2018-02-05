@@ -32,10 +32,12 @@ pkgconfig_DATA = libpacket.pc
 
 bin_PROGRAMS = \
 example/forward \
-example/flood
+example/flood \
+example/ping
 
 example_forward_LDFLAGS = -lpacket -lreactor -ldynamic
 example_flood_LDFLAGS = -lpacket -lreactor -ldynamic
+example_ping_LDFLAGS = -lpacket -lreactor -ldynamic
 
 MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in libpacket-?.?.?.tar.gz
 maintainer-clean-local:; rm -rf autotools m4 libpacket-?.?.?

@@ -90,7 +90,7 @@ int main(int argc, char **argv)
   state.t0 = ntime();
   (void) reactor_core_construct();
   (void) reactor_timer_open(&state.timer, timer, &state, 1000000000, 1000000000);
-  e = packet_open(&state.writer, event, &state, PACKET_TYPE_WRITER, argv[1], 2048, 2048 * 2048, 16);
+  e = packet_open(&state.writer, event, &state, PACKET_TYPE_WRITER, argv[1], 2048, 128 * 2048, 4);
   if (e == -1)
     err(1, "packet_open");
 
