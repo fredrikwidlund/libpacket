@@ -38,6 +38,7 @@ example/ping
 example_forward_LDFLAGS = -lpacket -lreactor -ldynamic
 example_flood_LDFLAGS = -lpacket -lreactor -ldynamic
 example_ping_LDFLAGS = -lpacket -lreactor -ldynamic
+example_ping_SOURCES = example/ping.c example/packet_route.c
 
 MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in libpacket-?.?.?.tar.gz
 maintainer-clean-local:; rm -rf autotools m4 libpacket-?.?.?
