@@ -119,17 +119,17 @@ void ping(struct state *s)
   char data[8] = {0};
 
   packet_route_ether(&s->route, &h, ETH_P_IP);
-  packet_frame_push(&f, PACKET_LAYER_TYPE_ETHER, &h, sizeof h);
-
   packet_route_ip(&s->route, &ip, sizeof icmp + sizeof data, IPPROTO_ICMP);
-  packet_frame_push(&f, PACKET_LAYER_TYPE_IP, &ip, sizeof ip);
-
   packet_header_icmp(&icmp, ICMP_ECHO, 0, data, sizeof data);
-  packet_frame_push(&f, PACKET_LAYER_TYPE_ICMP, &icmp, sizeof icmp);
 
+  packet_frame_push(&f, PACKET_LAYER_TYPE_ETHER, &h, sizeof h);
+  packet_frame_push(&f, PACKET_LAYER_TYPE_IP, &ip, sizeof ip);
+  packet_frame_push(&f, PACKET_LAYER_TYPE_ICMP, &icmp, sizeof icmp);
   packet_frame_push(&f, PACKET_LAYER_TYPE_DATA, data, sizeof data);
 
   packet_write(&s->writer, &f);
+
+  //packet_route_write_udp(&s->route, &s->writer, 5004, 5004, data, sizeof data);
 }
 
 
