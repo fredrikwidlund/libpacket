@@ -39,7 +39,7 @@ struct packet
   size_t                ring_size;
 };
 
-int  packet_open(packet *, reactor_user_callback *, void *, int, char *, size_t, size_t, size_t);
+int  packet_open(packet *, reactor_user_callback *, void *, int, int, size_t, size_t, size_t);
 void packet_close(packet *);
 void packet_write(packet *, packet_frame *);
 int  packet_flush(packet *);

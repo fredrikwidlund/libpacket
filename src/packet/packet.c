@@ -34,13 +34,9 @@ static int packet_error(packet *p)
   return reactor_user_dispatch(&p->user, PACKET_EVENT_ERROR, NULL);
 }
 
-static int packet_configure(packet *p, int fd, char *interface)
+static int packet_configure(packet *p, int fd, int if_index)
 {
-  int e, index;
-
-  index = if_nametoindex(interface);
-  if (!index)
-    return -1;
+  int e;
 
   e = setsockopt(fd, SOL_PACKET, PACKET_VERSION, (int []) {TPACKET_V3}, sizeof (int));
   if (e == -1)
@@ -64,7 +60,7 @@ static int packet_configure(packet *p, int fd, char *interface)
   e = bind(fd, (struct sockaddr *) (struct sockaddr_ll []){{
         .sll_family = PF_PACKET,
         .sll_protocol = htons(ETH_P_ALL),
-        .sll_ifindex = index
+        .sll_ifindex = if_index
       }}, sizeof (struct sockaddr_ll));
   if (e == -1)
     return -1;
@@ -72,7 +68,7 @@ static int packet_configure(packet *p, int fd, char *interface)
   return 0;
 }
 
-static int packet_socket(packet *p, char *interface)
+static int packet_socket(packet *p, int if_index)
 {
   int fd, e;
 
@@ -80,7 +76,7 @@ static int packet_socket(packet *p, char *interface)
   if (fd == -1)
     return -1;
 
-  e = packet_configure(p, fd, interface);
+  e = packet_configure(p, fd, if_index);
   if (e == -1)
     {
       (void) close(fd);
@@ -152,7 +148,7 @@ static int packet_socket_event(void *state, int type, void *data)
   return *flags ? packet_error(p) : REACTOR_OK;
 }
 
-int packet_open(packet *p, reactor_user_callback *callback, void *state, int type, char *interface,
+int packet_open(packet *p, reactor_user_callback *callback, void *state, int type, int if_index,
                 size_t frame_size, size_t block_size, size_t block_count)
 {
   int e, fd;
@@ -161,7 +157,7 @@ int packet_open(packet *p, reactor_user_callback *callback, void *state, int typ
   reactor_user_construct(&p->user, callback, state);
   list_construct(&p->queue);
 
-  fd = packet_socket(p, interface);
+  fd = packet_socket(p, if_index);
   if (fd == -1)
     return REACTOR_ERROR;
 

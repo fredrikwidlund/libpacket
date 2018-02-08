@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <netdb.h>
 #include <err.h>
+#include <net/if.h>
 
 #include <dynamic.h>
 #include <reactor.h>
@@ -50,11 +51,11 @@ int main(int argc, char **argv)
     usage();
 
   (void) reactor_core_construct();
-  e = packet_open(&state.reader, event, &state, PACKET_TYPE_READER, argv[1], 2048, 1024 * 2048, 4);
+  e = packet_open(&state.reader, event, &state, PACKET_TYPE_READER, if_nametoindex(argv[1]), 2048, 1024 * 2048, 4);
   if (e == -1)
     err(1, "packet_open");
 
-  e = packet_open(&state.writer, event, &state, PACKET_TYPE_WRITER, argv[2], 2048, 1024 * 2048, 4);
+  e = packet_open(&state.writer, event, &state, PACKET_TYPE_WRITER, if_nametoindex(argv[2]), 2048, 1024 * 2048, 4);
   if (e == -1)
     err(1, "packet_open");
 
