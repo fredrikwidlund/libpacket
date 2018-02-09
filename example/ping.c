@@ -9,7 +9,7 @@
 #include <time.h>
 #include <err.h>
 
-#include <libnetlink.h>
+#include <linux/rtnetlink.h>
 #include <net/if.h>
 #include <net/ethernet.h>
 #include <netinet/ip.h>

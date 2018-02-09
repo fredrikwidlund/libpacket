@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
@@ -5,12 +6,13 @@
 #include <netdb.h>
 #include <sys/ioctl.h>
 
-#include <libnetlink.h>
+#include <linux/rtnetlink.h>
 #include <net/if.h>
 #include <netinet/ether.h>
 #include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
 #include <netinet/udp.h>
+#include <arpa/inet.h>
 
 #include "packet_header.h"
 #include "packet_route.h"
