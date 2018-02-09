@@ -74,11 +74,12 @@ void packet_header_icmp(struct icmphdr *icmp, int type, int code, void *data, si
 void packet_header_udp(struct udphdr *udp, uint16_t src, uint16_t dst, void *data, size_t size)
 {
   uint32_t sum;
+  uint16_t source = htons(src), dest = htons(dst), len = htons(size);
 
   *udp = (struct udphdr) {
-    .source = src,
-    .dest = dst,
-    .len = size
+    .source = source,
+    .dest = dest,
+    .len = len
   };
   if (data)
     {
