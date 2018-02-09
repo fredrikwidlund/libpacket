@@ -12,6 +12,7 @@
 #include <net/ethernet.h>
 #include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
+#include <netinet/udp.h>
 
 #include "packet_header.h"
 
@@ -68,4 +69,21 @@ void packet_header_icmp(struct icmphdr *icmp, int type, int code, void *data, si
   sum = packet_header_checksum_add(0, icmp, sizeof *icmp);
   sum = packet_header_checksum_add(sum, data, size);
   icmp->checksum = packet_header_checksum_final(sum);
+}
+
+void packet_header_udp(struct udphdr *udp, uint16_t src, uint16_t dst, void *data, size_t size)
+{
+  uint32_t sum;
+
+  *udp = (struct udphdr) {
+    .source = src,
+    .dest = dst,
+    .len = size
+  };
+  if (data)
+    {
+      sum = packet_header_checksum_add(0, udp, sizeof *udp);
+      sum = packet_header_checksum_add(sum, data, size);
+      udp->check = packet_header_checksum_final(sum);
+    }
 }

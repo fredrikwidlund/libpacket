@@ -10,6 +10,7 @@
 #include <netinet/ether.h>
 #include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
+#include <netinet/udp.h>
 
 #include "packet_header.h"
 #include "packet_route.h"
