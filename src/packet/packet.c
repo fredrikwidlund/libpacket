@@ -198,6 +198,7 @@ static void packet_write_queue(packet *p, packet_frame *f)
 
   packet_frame_copy(&copy, f);
   list_push_back(&p->queue, &copy, sizeof copy);
+  p->queue_length ++;
   p->flags |= PACKET_FLAG_BLOCKED;
 }
 
@@ -274,6 +275,7 @@ int packet_flush(packet *p)
         break;
       packet_frame_release(f);
       list_erase(f, NULL);
+      p->queue_length --;
     }
 
   if (!p->ring_size && list_empty(&p->queue))

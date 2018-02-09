@@ -28,6 +28,7 @@ struct packet
   int                   type;
   int                   flags;
   list                  queue;
+  size_t                queue_length;
 
   reactor_descriptor    descriptor;
   size_t                frame_size;
