@@ -8,10 +8,14 @@ LICENSE \
 README.rst
 
 SOURCE_FILES = \
+src/packet/packet_header.c \
+src/packet/packet_route.c \
 src/packet/packet.c \
 src/packet/packet_frame.c
 
 HEADER_FILES = \
+src/packet/packet_header.h \
+src/packet/packet_route.h \
 src/packet/packet.h \
 src/packet/packet_frame.h
 
@@ -38,7 +42,6 @@ example/ping
 example_forward_LDFLAGS = -lpacket -lreactor -ldynamic
 example_flood_LDFLAGS = -lpacket -lreactor -ldynamic
 example_ping_LDFLAGS = -lpacket -lreactor -ldynamic
-example_ping_SOURCES = example/ping.c example/packet_route.c
 
 MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in libpacket-?.?.?.tar.gz
 maintainer-clean-local:; rm -rf autotools m4 libpacket-?.?.?

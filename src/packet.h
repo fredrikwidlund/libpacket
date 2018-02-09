@@ -10,6 +10,8 @@
 extern "C" {
 #endif
 
+#include "packet/packet_header.h"
+#include "packet/packet_route.h"
 #include "packet/packet_frame.h"
 #include "packet/packet.h"
 

@@ -1,16 +1,17 @@
-#define _GNU_SOURCE
-
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
 #include <netdb.h>
-#include <libnetlink.h>
 #include <sys/ioctl.h>
+
+#include <libnetlink.h>
 #include <net/if.h>
 #include <netinet/ether.h>
+#include <netinet/ip.h>
+#include <netinet/ip_icmp.h>
 
+#include "packet_header.h"
 #include "packet_route.h"
 
 struct packet_route_request
@@ -186,4 +187,14 @@ void packet_route_debug(packet_route *r, FILE *out)
   (void) fprintf(out, "%s/", ether_ntoa((struct ether_addr *) r->ether_dst));
   (void) fprintf(out, "%s", inet_ntoa(*(struct in_addr *) &r->ip_dst));
   (void) fprintf(out, "(%s)]\n", inet_ntoa(*(struct in_addr *) &r->gateway));
+}
+
+void packet_route_ether(packet_route *r, struct ethhdr *h, uint16_t proto)
+{
+  packet_header_ether(h, r->ether_src, r->ether_dst, proto);
+}
+
+void packet_route_ip(packet_route *r, struct iphdr *ip, size_t size, int protocol)
+{
+  packet_header_ip(ip, size, protocol, r->ip_src, r->ip_dst);
 }

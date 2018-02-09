@@ -16,5 +16,7 @@ struct packet_route
 
 int  packet_route_construct(packet_route *, char *);
 void packet_route_debug(packet_route *, FILE *);
+void packet_route_ether(packet_route *, struct ethhdr *, uint16_t);
+void packet_route_ip(packet_route *, struct iphdr *, size_t, int);
 
 #endif /* PACKET_ROUTE_H_INCLUDED */
