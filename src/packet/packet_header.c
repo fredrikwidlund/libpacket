@@ -7,18 +7,11 @@
 #include <time.h>
 #include <err.h>
 
-#include <asm/types.h>
 #include <libnetlink.h>
-#include <linux/netlink.h>
-#include <linux/in_route.h>
-#include <linux/ip.h>
-#include <linux/icmp.h>
-
-#include <sys/ioctl.h>
 #include <net/if.h>
-#include <netinet/in.h>
-#include <netinet/ether.h>
-#include <arpa/inet.h>
+#include <net/ethernet.h>
+#include <netinet/ip.h>
+#include <netinet/ip_icmp.h>
 
 #include "packet_header.h"
 

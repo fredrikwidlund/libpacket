@@ -10,13 +10,10 @@
 #include <sys/epoll.h>
 
 #include <net/if.h>
-#include <net/if_arp.h>
-#include <linux/if_ether.h>
+#include <net/ethernet.h>
+#include <netinet/ip.h>
+#include <netinet/ip_icmp.h>
 #include <linux/if_packet.h>
-#include <linux/ip.h>
-#include <linux/icmp.h>
-#include <linux/udp.h>
-#include <linux/tcp.h>
 
 #include <dynamic.h>
 #include <reactor.h>

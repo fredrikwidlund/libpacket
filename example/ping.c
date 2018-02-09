@@ -9,10 +9,11 @@
 #include <time.h>
 #include <err.h>
 
-#include <linux/if.h>
-#include <linux/if_ether.h>
-#include <linux/ip.h>
-#include <linux/icmp.h>
+#include <libnetlink.h>
+#include <net/if.h>
+#include <net/ethernet.h>
+#include <netinet/ip.h>
+#include <netinet/ip_icmp.h>
 
 #include <dynamic.h>
 #include <reactor.h>
